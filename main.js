@@ -18,8 +18,8 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  
-  require('./server.js');
+
+  require('./server');
   createWindow();
 
   autoUpdater.checkForUpdatesAndNotify();
