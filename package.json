@@ -1,0 +1,52 @@
+{
+  "name": "skidrop",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "concurrently \"npm run server\" \"npm run electron\"",
+    "electron": "electron .",
+    "server": "node server.js",
+    "dist": "electron-builder"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dgram": "^1.0.1",
+    "ejs": "^3.1.10",
+    "electron": "^36.4.0",
+    "express": "^5.1.0",
+    "multer": "^2.0.1",
+    "nodemon": "^3.1.10"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.skidrop.app",
+    "productName": "Skidrop",
+    "files": [
+      "**/*"
+    ],
+    "directories": {
+      "buildResources": "public"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    },
+    "publish": [
+      {
+        "provider": "github"
+      }
+    ]
+  }
+}

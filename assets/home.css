@@ -1,0 +1,697 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    color: #1a1a1a;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.device-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+    flex: 1;
+}
+
+.device-avatar {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.device-details {
+    min-width: 0;
+    flex: 1;
+}
+
+.device-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.device-address {
+    color: #666;
+    font-size: 0.9rem;
+    font-family: 'SF Mono', Monaco, monospace;
+}
+
+.pin-display {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.pin-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pin-code {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #007AFF;
+    font-family: 'SF Mono', Monaco, monospace;
+}
+
+/* Upload Section */
+.upload-section {
+    margin-bottom: 3rem;
+}
+
+.upload-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 2rem;
+    border: 2px dashed #e1e5e9;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-card:hover {
+    border-color: #007AFF;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 122, 255, 0.15);
+}
+
+.upload-card.drag-over {
+    border-color: #007AFF;
+    background: rgba(0, 122, 255, 0.05);
+    transform: scale(1.02);
+}
+
+.upload-card.file-selected {
+    border-color: #34C759;
+    border-style: solid;
+    cursor: default;
+}
+
+.upload-content {
+    text-align: center;
+    width: 100%;
+}
+
+.upload-icon {
+    margin-bottom: 1.5rem;
+    color: #007AFF;
+}
+
+.upload-content h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.upload-content p {
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.browse-btn {
+    background: #007AFF;
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+}
+
+.browse-btn:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+}
+
+/* File Preview */
+.file-preview {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    text-align: left;
+}
+
+.preview-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.preview-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.preview-info h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    word-break: break-all;
+}
+
+.preview-info p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.preview-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.change-btn {
+    background: #8E8E93;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.change-btn:hover {
+    background: #6D6D70;
+    transform: translateY(-1px);
+}
+
+.upload-btn {
+    background: #34C759;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.upload-btn:hover {
+    background: #28a745;
+    transform: translateY(-1px);
+}
+
+.upload-btn:disabled {
+    background: #8E8E93;
+    cursor: not-allowed;
+    transform: none;
+}
+
+#fileInput {
+    display: none;
+}
+
+/* Section Titles */
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Files Section */
+.files-section {
+    margin-bottom: 3rem;
+}
+
+.files-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.file-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.file-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.file-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.file-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.file-name {
+    font-weight: 600;
+    word-break: break-all;
+    margin-bottom: 0.25rem;
+}
+
+.file-meta {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.file-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.action-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.download-btn {
+    background: #34C759;
+    color: white;
+}
+
+.download-btn:hover {
+    background: #28a745;
+    transform: scale(1.05);
+}
+
+.delete-btn {
+    background: #FF3B30;
+    color: white;
+}
+
+.delete-btn:hover {
+    background: #dc3545;
+    transform: scale(1.05);
+}
+
+.delete-form {
+    display: inline;
+}
+
+/* Devices Section */
+.devices-section {
+    margin-bottom: 2rem;
+}
+
+.devices-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.device-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.device-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.device-card .device-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.device-card .device-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.device-card .device-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.device-card .device-address {
+    color: #666;
+    font-size: 0.85rem;
+    font-family: 'SF Mono', Monaco, monospace;
+}
+
+.connect-btn {
+    background: #007AFF;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.connect-btn:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+}
+
+/* Empty and Loading States */
+.empty-state,
+.loading-state,
+.error-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #666;
+}
+
+.empty-state svg,
+.loading-state svg,
+.error-state svg {
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.empty-state span,
+.error-state span {
+    display: block;
+    font-size: 0.9rem;
+    color: #999;
+    margin-top: 0.5rem;
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #007AFF;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+.spinner-small {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 0.75rem;
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        padding: 1.25rem 1.5rem;
+    }
+    
+    .device-info {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+    }
+    
+    .device-name {
+        font-size: 1.25rem;
+    }
+    
+    .pin-display {
+        text-align: center;
+    }
+    
+    .upload-card {
+        padding: 1.5rem;
+        min-height: 180px;
+    }
+    
+    .upload-content h2 {
+        font-size: 1.25rem;
+    }
+    
+    .browse-btn {
+        padding: 0.875rem 1.75rem;
+        font-size: 1rem;
+    }
+    
+    .file-preview {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .preview-actions {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .change-btn,
+    .upload-btn {
+        flex: 1;
+        justify-content: center;
+        min-width: 120px;
+    }
+    
+    .file-card,
+    .device-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+        padding: 1.25rem;
+    }
+    
+    .file-actions,
+    .preview-actions {
+        justify-content: center;
+        gap: 1rem;
+    }
+    
+    .action-btn {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .connect-btn {
+        padding: 0.875rem 1.5rem;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .section-title {
+        font-size: 1.125rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0.5rem;
+    }
+    
+    .header {
+        padding: 1rem;
+        border-radius: 16px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .device-name {
+        font-size: 1.125rem;
+    }
+    
+    .pin-code {
+        font-size: 1.25rem;
+    }
+    
+    .upload-card {
+        padding: 1.25rem;
+        border-radius: 20px;
+        min-height: 160px;
+    }
+    
+    .upload-content h2 {
+        font-size: 1.125rem;
+    }
+    
+    .upload-content p {
+        font-size: 0.9rem;
+    }
+    
+    .browse-btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .preview-icon {
+        width: 56px;
+        height: 56px;
+    }
+    
+    .preview-info h3 {
+        font-size: 1.125rem;
+    }
+    
+    .change-btn,
+    .upload-btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.9rem;
+    }
+    
+    .file-card,
+    .device-card {
+        padding: 1rem;
+        border-radius: 12px;
+    }
+    
+    .file-icon,
+    .device-card .device-avatar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .section-title {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+}
+
+/* Touch improvements for mobile */
+@media (hover: none) and (pointer: coarse) {
+    .action-btn,
+    .connect-btn,
+    .browse-btn,
+    .change-btn,
+    .upload-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .upload-card {
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+/* Smooth animations */
+@media (prefers-reduced-motion: no-preference) {
+    * {
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .upload-card,
+    .file-card,
+    .device-card,
+    .header {
+        border: 2px solid #000;
+    }
+    
+    .browse-btn,
+    .upload-btn,
+    .connect-btn {
+        border: 2px solid #000;
+    }
+}
