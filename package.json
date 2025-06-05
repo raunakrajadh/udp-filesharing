@@ -20,13 +20,13 @@
   "dependencies": {
     "dgram": "^1.0.1",
     "ejs": "^3.1.10",
-    "electron": "^36.4.0",
     "electron-updater": "^6.6.2",
     "express": "^5.1.0",
     "multer": "^2.0.1",
     "nodemon": "^3.1.10"
   },
   "devDependencies": {
+    "electron": "^36.4.0",
     "concurrently": "^9.1.2",
     "electron-builder": "^26.0.12"
   },
