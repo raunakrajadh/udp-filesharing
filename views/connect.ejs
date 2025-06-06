@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Device Connector</title>
+    <title>Skidrop</title>
     <link rel="stylesheet" href="/assets/connect.css">
 </head>
 <body>
     <div class="container">
         <div style="display: flex; align-items: center; justify-content: space-between;">
-            <h1 style="margin: 0;">Device Connector</h1>
+            <h1 style="margin: 0;">Skidrop Connect</h1>
             <div style="display: flex; gap: 8px;">
                 <button class="connect-btn" onclick="window.location.href = '/'">Share</button>
                 <button class="connect-btn" onclick="window.location.reload()">Refresh</button>
@@ -32,11 +32,7 @@
             const res = await fetch('/devices');
             let devices = await res.json();
 
-            devices = [
-                { deviceName: "Device 1", ip: "192.168.1.100", port: "8080" },
-                { deviceName: "Device 2", ip: "192.168.1.101", port: "8080" },
-                { deviceName: "Device 3", ip: "192.168.1.102", port: "8080" }
-            ];
+            devices.push({ deviceName: "This Device", ip: "192.168.1.198", port: "8005" });
 
             if (devices.length === 0) {
                 container.innerHTML = `
@@ -130,9 +126,15 @@
             const filesList = document.getElementById(`files-list-${deviceId}`);
 
             try {
-                // Replace this URL with your actual endpoint to get files from a device
-                const response = await fetch(`http://${ip}:${port}/api/files`);
-                const files = await response.json();
+                const response = await fetch('/loadfiles', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ ip, port, pin: 1234 })
+                });
+
+                const files = (await response.json()).files;
 
                 if (files.length === 0) {
                     filesList.innerHTML = `
@@ -158,7 +160,7 @@
                                 <span class="file-name-small">${file.name}</span>
                                 <span class="file-size-small">${formatFileSize(file.size)}</span>
                             </div>
-                            <a href="http://${ip}:${port}/${file.name}" target="_blank" class="download-file-btn">
+                            <a href="http://${ip}:${port}/uploads/${file.name}" target="_blank" class="download-file-btn">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                                     <polyline points="7,10 12,15 17,10"/>
@@ -169,6 +171,7 @@
                     `).join('');
                 }
             } catch (error) {
+                console.error('Error loading files:', error);
                 filesList.innerHTML = `
                     <div class="error-files">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">

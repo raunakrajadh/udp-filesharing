@@ -7,6 +7,7 @@ const app = express();
 const PORT = 8005;
 
 // Middleware
+app.use(express.json());
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use('/assets', express.static('assets'));
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/', require('./routes/home'));
 app.use('/connect', require('./routes/connect'));
+app.use('/loadfiles', require('./routes/loadfiles'));
 app.use('/upload', require('./routes/upload'));
 app.use('/delete', require('./routes/delete'));
 app.use('/devices', require('./routes/devices'));
