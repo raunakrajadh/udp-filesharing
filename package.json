@@ -36,7 +36,6 @@
     "files": [
       "**/*"
     ],
-    "asar": false,
     "directories": {
       "buildResources": "public"
     },
