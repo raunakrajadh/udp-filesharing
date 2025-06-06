@@ -2,6 +2,7 @@ const { app, BrowserWindow } = require('electron');
 const { autoUpdater } = require('electron-updater');
 
 const path = require('path');
+const { electron } = require('process');
 const isDev = !app.isPackaged;
 
 function createWindow() {
@@ -20,7 +21,11 @@ function createWindow() {
 
 app.whenReady().then(() => {
 
-  require('./server');
+  const uploadPath = path.join(app.getPath('userData'), 'uploads');
+  if (!fs.existsSync(uploadPath)) {
+    fs.mkdirSync(uploadPath, { recursive: true });
+  }
+  require('./server')(uploadPath);
   createWindow();
 
   autoUpdater.checkForUpdatesAndNotify();
@@ -49,3 +54,5 @@ autoUpdater.on('update-downloaded', () => {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
+
+module.exports = { electronApp: app };

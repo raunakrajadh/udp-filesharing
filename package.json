@@ -1,14 +1,14 @@
 {
   "name": "skidrop",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "dev": "concurrently \"npm run server\" \"npm run electron\"",
     "electron": "electron .",
     "server": "node server.js",
     "dist": "electron-builder",
-    "ds": "nodemon server.js"
+    "ds": "nodemon server.js",
+    "dev": "concurrently \"nodemon server-dev.js\" \"wait-on http://localhost:8005 && electron .\""
   },
   "repository": {
     "type": "git",
@@ -23,13 +23,13 @@
     "ejs": "^3.1.10",
     "electron-updater": "^6.6.2",
     "express": "^5.1.0",
-    "multer": "^2.0.1",
-    "nodemon": "^3.1.10"
+    "multer": "^2.0.1"
   },
   "devDependencies": {
-    "electron": "^36.4.0",
     "concurrently": "^9.1.2",
-    "electron-builder": "^26.0.12"
+    "electron": "^36.4.0",
+    "electron-builder": "^26.0.12",
+    "nodemon": "^3.1.10"
   },
   "build": {
     "appId": "com.raunakrajadh.skidrop",
