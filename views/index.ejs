@@ -4,17 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skidrop</title>
-    <link rel="stylesheet" href="/assets/index.css">
+    <link rel="stylesheet" href="assets/index.css">
 </head>
 <body>
     <div class="container">
-
-        <div style="display: flex; align-items: center; justify-content: space-between;">
-            <h1 style="margin: 0;">Skidrop Share</h1>
-            <button class="connect-btn" onclick="window.location.href = '/connect'">Connect To Other Device</button>
-        </div>
-
-        <br>
+        <!-- Top Navigation Bar -->
+        <nav class="top-nav" style="padding: 15px; border-radius: 20px;">
+            <h1 class="app-title">Skidrop Share</h1>
+            <button class="connect-btn" onclick="window.location.href = '/connect'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+                <span class="connect-text">Connect</span>
+            </button>
+        </nav>
 
         <!-- Header Section -->
         <header class="header">
@@ -27,7 +30,7 @@
                     </svg>
                 </div>
                 <div class="device-details">
-                    <h1 class="device-name"><%= deviceName %></h1>
+                    <h2 class="device-name"><%= deviceName %></h2>
                     <p class="device-address"><%= ip %>:<%= port %></p>
                 </div>
             </div>
@@ -78,7 +81,7 @@
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                                 <polyline points="14,2 14,8 20,8"/>
                             </svg>
-                            Change
+                            <span>Change</span>
                         </button>
                         <button type="submit" class="upload-btn" id="uploadBtn" form="uploadForm">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -86,7 +89,7 @@
                                 <polyline points="17,8 12,3 7,8"/>
                                 <line x1="12" y1="3" x2="12" y2="15"/>
                             </svg>
-                            Upload
+                            <span>Upload</span>
                         </button>
                     </div>
                 </div>
@@ -238,7 +241,7 @@
         uploadForm.addEventListener('submit', (e) => {
             uploadBtn.innerHTML = `
                 <div class="spinner-small"></div>
-                Uploading...
+                <span>Uploading...</span>
             `;
             uploadBtn.disabled = true;
         });
