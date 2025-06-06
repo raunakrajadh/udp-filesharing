@@ -10,12 +10,7 @@ router.get('/', (req, res) => {
     if (now - device.lastSeen > DEVICE_TIMEOUT) discoveredDevices.delete(name);
   }
 
-  res.json(Array.from(discoveredDevices.entries()).map(([deviceName, info]) => ({
-    deviceName,
-    ip: info.ip,
-    port: info.port,
-    pin: info.pin
-  })));
+  res.json(Array.from(discoveredDevices.entries()).map(([deviceName, info]) => ({ deviceName, ip: info.ip, port: info.port, pin: info.pin})));
 });
 
 module.exports = router;

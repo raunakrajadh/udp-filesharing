@@ -15,8 +15,4 @@ function getLocalIPAddress() {
   return '127.0.0.1';
 }
 
-module.exports = {
-  DEVICE_NAME,
-  PIN,
-  localIP: getLocalIPAddress()
-};
+module.exports = {DEVICE_NAME, PIN, localIP: getLocalIPAddress()};

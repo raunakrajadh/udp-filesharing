@@ -15,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/', require('./routes/home'));
+app.use('/connect', require('./routes/connect'));
 app.use('/upload', require('./routes/upload'));
 app.use('/delete', require('./routes/delete'));
 app.use('/devices', require('./routes/devices'));
