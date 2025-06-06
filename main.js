@@ -21,11 +21,7 @@ function createWindow() {
 
 app.whenReady().then(() => {
 
-  const uploadPath = path.join(app.getPath('userData'), 'uploads');
-  if (!fs.existsSync(uploadPath)) {
-    fs.mkdirSync(uploadPath, { recursive: true });
-  }
-  require('./server')(uploadPath);
+  require('./server');
   createWindow();
 
   autoUpdater.checkForUpdatesAndNotify();
@@ -55,4 +51,4 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
-module.exports = { electronApp: app };
+module.exports = { electronApp: app }
