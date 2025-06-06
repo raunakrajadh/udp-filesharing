@@ -12,6 +12,7 @@ function setupBroadcaster(httpPort) {
 
     setInterval(() => {
       const message = JSON.stringify({
+        type: 'device-info',
         deviceName: DEVICE_NAME,
         ip: localIP,
         port: httpPort,
@@ -40,15 +41,19 @@ function setupListener() {
 
   listener.on('message', (msg, rinfo) => {
     try {
-      const device = JSON.parse(msg.toString());
-      if (device.deviceName === DEVICE_NAME) return;
+      const message = JSON.parse(msg.toString());
 
-      discoveredDevices.set(device.deviceName, {
-        ip: device.ip,
-        port: device.port,
-        pin: device.pin,
-        lastSeen: Date.now()
-      });
+      if(message.type == 'device-info'){
+        if (message.deviceName === DEVICE_NAME) return;
+  
+        discoveredDevices.set(message.deviceName, {
+          ...message,
+          lastSeen: Date.now()
+        });
+      }
+      else{
+        console.warn('Unknown message type:');
+      }
     } catch (err) {
       console.warn('Failed to parse UDP message:', err);
     }
