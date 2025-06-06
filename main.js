@@ -20,13 +20,33 @@ function createWindow() {
 
 app.whenReady().then(() => {
 
-  require('./server');
+  const uploadPath = path.join(app.getPath('userData'), 'uploads');
+  if (!fs.existsSync(uploadPath)) {
+    fs.mkdirSync(uploadPath, { recursive: true });
+  }
+  require('./server')(uploadPath);
   createWindow();
 
   autoUpdater.checkForUpdatesAndNotify();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  });
+});
+
+autoUpdater.on('update-available', () => {
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Update available',
+    message: 'A new version is available. Downloading now...'
+  });
+});
+
+autoUpdater.on('update-downloaded', () => {
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Update downloaded',
+    message: 'A new version has been downloaded. It will be installed on quit.'
   });
 });
 
