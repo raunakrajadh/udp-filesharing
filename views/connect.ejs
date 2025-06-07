@@ -50,8 +50,128 @@
         </section>
     </div>
 
+    <!-- Custom Modal for PIN Input -->
+    <div id="pin-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Enter PIN</h3>
+                <button class="modal-close" onclick="closePinModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="pin-modal-message">Enter PIN for device:</p>
+                <input type="password" id="pin-input" class="modal-input" placeholder="Enter PIN" maxlength="10">
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" onclick="closePinModal()">Cancel</button>
+                <button class="modal-btn modal-btn-primary" onclick="submitPin()">Connect</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Modal for Alerts -->
+    <div id="alert-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Alert</h3>
+                <button class="modal-close" onclick="closeAlertModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                </div>
+                <p id="alert-modal-message">Alert message</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-primary" onclick="closeAlertModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const container = document.getElementById('devices-container');
+        let currentPinCallback = null;
+
+        // Custom PIN prompt function
+        function showPinModal(message, callback) {
+            document.getElementById('pin-modal-message').textContent = message;
+            document.getElementById('pin-input').value = '';
+            document.getElementById('pin-modal').style.display = 'flex';
+            document.getElementById('pin-input').focus();
+            currentPinCallback = callback;
+        }
+
+        function closePinModal() {
+            document.getElementById('pin-modal').style.display = 'none';
+            if (currentPinCallback) {
+                currentPinCallback(null);
+                currentPinCallback = null;
+            }
+        }
+
+        function submitPin() {
+            const pin = document.getElementById('pin-input').value.trim();
+            document.getElementById('pin-modal').style.display = 'none';
+            if (currentPinCallback) {
+                currentPinCallback(pin);
+                currentPinCallback = null;
+            }
+        }
+
+        // Custom alert function
+        function showAlert(message) {
+            document.getElementById('alert-modal-message').textContent = message;
+            document.getElementById('alert-modal').style.display = 'flex';
+        }
+
+        function closeAlertModal() {
+            document.getElementById('alert-modal').style.display = 'none';
+        }
+
+        // Handle Enter key in PIN input
+        document.getElementById('pin-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitPin();
+            }
+        });
+
+        // Handle Escape key to close modals
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (document.getElementById('pin-modal').style.display === 'flex') {
+                    closePinModal();
+                }
+                if (document.getElementById('alert-modal').style.display === 'flex') {
+                    closeAlertModal();
+                }
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('pin-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePinModal();
+            }
+        });
+
+        document.getElementById('alert-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAlertModal();
+            }
+        });
 
         async function loadDevices() {
             try {
@@ -323,51 +443,50 @@
                 `;
             }
         }
-
-        // PIN prompt function
+        
         async function promptPin(ip, port) {
-            const pin = prompt(`Enter PIN for ${ip}:${port}`);
+            showPinModal(`Enter PIN for ${ip}:${port}`, async function(pin) {
+                console.log(pin);
 
-            console.log(pin)
+                if (!pin) return;
 
-            if (!pin) return;
+                try {
+                    const res = await fetch('/devices');
+                    const devices = await res.json();
 
-            try {
-                const res = await fetch('/devices');
-                const devices = await res.json();
+                    const device = devices.find(device => device.ip == ip && device.port == port && device.pin == pin);
 
-                const device = devices.find(device => device.ip == ip && device.port == port && device.pin == pin);
+                    if (!device) {
+                        showAlert('Invalid PIN or device not found.');
+                        return;
+                    }
 
-                if (!device) {
-                    alert('Invalid PIN or device not found.');
-                    return;
-                }
-
-                // Show success feedback
-                const connectBtn = document.querySelector(`button.connect-btn[onclick*="${ip}"][onclick*="${port}"]`);
-                const originalContent = connectBtn.innerHTML;
-                
-                connectBtn.innerHTML = `
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="20,6 9,17 4,12"/>
-                    </svg>
-                    <span>Disconnect</span>
-                `;
-                connectBtn.style.background = 'Red';
-                document.cookie = `device=${encodeURIComponent(JSON.stringify(device))}; max-age=${10 * 60}; path=/`;
-                loadDeviceFiles(`${ip}-${port}`);
-                connectBtn.onclick = () => {
-                    document.cookie = "device=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                    connectBtn.innerHTML = originalContent;
-                    connectBtn.style.background = '';
+                    // Show success feedback
+                    const connectBtn = document.querySelector(`button.connect-btn[onclick*="${ip}"][onclick*="${port}"]`);
+                    const originalContent = connectBtn.innerHTML;
+                    
+                    connectBtn.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20,6 9,17 4,12"/>
+                        </svg>
+                        <span>Disconnect</span>
+                    `;
+                    connectBtn.style.background = 'Red';
+                    document.cookie = `device=${encodeURIComponent(JSON.stringify(device))}; max-age=${10 * 60}; path=/`;
                     loadDeviceFiles(`${ip}-${port}`);
-                    connectBtn.onclick = () => promptPin(ip, port);
-                };
-                
-            } catch (err) {
-                console.error('Error verifying PIN:', err);
-                alert('Failed to connect. Device might be offline or not responding.');
-            }
+                    connectBtn.onclick = () => {
+                        document.cookie = "device=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                        connectBtn.innerHTML = originalContent;
+                        connectBtn.style.background = '';
+                        loadDeviceFiles(`${ip}-${port}`);
+                        connectBtn.onclick = () => promptPin(ip, port);
+                    };
+                    
+                } catch (err) {
+                    console.error('Error verifying PIN:', err);
+                    showAlert('Failed to connect. Device might be offline or not responding.');
+                }
+            });
         }
 
         // Helper function to format file size
