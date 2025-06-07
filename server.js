@@ -11,8 +11,14 @@ app.use(express.json());
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.urlencoded({ extended: true }));
+
+// File upload middleware
+const os = require('os');
+const fs = require('fs');
+const tempUploadPath = path.join(os.tmpdir(), 'skidrop_uploads');
+if (!fs.existsSync(tempUploadPath)) fs.mkdirSync(tempUploadPath, { recursive: true });
+app.use('/uploads', express.static(tempUploadPath));
 
 // Routes
 app.use('/', require('./routes/home'));

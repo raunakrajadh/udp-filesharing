@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const fs = require('fs');
 const path = require('path');
+const os = require('os');
+const fs = require('fs');
+const tempUploadPath = path.join(os.tmpdir(), 'skidrop_uploads');
+if (!fs.existsSync(tempUploadPath)) fs.mkdirSync(tempUploadPath, { recursive: true });
 
 router.post('/', (req, res) => {
   
@@ -30,11 +33,10 @@ router.post('/local', (req, res) => {
     const { pin } = req.body;
     //check pin
 
-    const uploadsDir = path.join(__dirname, '../uploads');
-    fs.readdir(uploadsDir, (err, files) => {
+    fs.readdir(tempUploadPath, (err, files) => {
         if (err) return res.json({ files: [] });
         const fileInfos = files.map(fileName => {
-            const filePath = path.join(uploadsDir, fileName);
+            const filePath = path.join(tempUploadPath, fileName);
             const stats = fs.statSync(filePath);
             return {
                 name: fileName,

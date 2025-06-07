@@ -1,11 +1,16 @@
 const multer = require('multer');
 const path = require('path');
 
+const os = require('os');
+const fs = require('fs');
+const tempUploadPath = path.join(os.tmpdir(), 'skidrop_uploads');
+if (!fs.existsSync(tempUploadPath)) fs.mkdirSync(tempUploadPath, { recursive: true });
+
 const MAX_FILE_SIZE = 200 * 1024 * 1024; // 200 MB
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../uploads'));
+    cb(null, tempUploadPath);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
