@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const cookieParse = require('cookie-parser');
 const { DEVICE_NAME, PIN, localIP } = require('./utils/deviceInfo');
 const { setupBroadcaster, setupListener } = require('./utils/udp');
 
@@ -12,6 +13,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParse());
 
 // File upload middleware
 const os = require('os');

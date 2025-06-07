@@ -59,7 +59,7 @@
                 let devices = await res.json();
 
                 // Add current device for testing
-                devices.push({ deviceName: "This Device", ip: "192.168.1.198", port: "8005" });
+                // devices.push({ deviceName: "This Device", ip: "192.168.1.198", port: "8005" });
 
                 if (devices.length === 0) {
                     container.innerHTML = `
@@ -94,13 +94,78 @@
                                 <span class="device-status">Available</span>
                             </div>
                             <div class="device-actions">
-                                <button class="connect-btn" onclick="event.preventDefault(); promptPin('${device.ip}', '${device.port}')">
+
+                                <button class="connect-btn" 
+                                    onclick="
+                                        event.preventDefault();
+                                        const deviceCookie = document.cookie.split('; ').find(row => row.startsWith('device='));
+                                        let isConnected = false;
+                                        if (deviceCookie) {
+                                            try {
+                                                const deviceData = JSON.parse(decodeURIComponent(deviceCookie.split('=')[1]));
+                                                if (deviceData.ip === '${device.ip}' && String(deviceData.port) === String('${device.port}')) {
+                                                    isConnected = true;
+                                                }
+                                            } catch (e) {}
+                                        }
+                                        if (isConnected) {
+                                            const connectBtn = this;
+                                            const originalContent = connectBtn.innerHTML;
+                                            document.cookie = 'device=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                                            connectBtn.innerHTML = \`
+                                                <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'>
+                                                    <path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/>
+                                                    <polyline points='15,3 21,3 21,9'/>
+                                                    <line x1='10' y1='14' x2='21' y2='3'/>
+                                                </svg>
+                                                <span class='connect-btn-label'>Connect</span>
+                                            \`;
+                                            connectBtn.style.background = '';
+                                            toggleDeviceFiles('${device.ip}-${device.port}');
+                                            connectBtn.onclick = function() {
+                                                event.preventDefault();
+                                                promptPin('${device.ip}', '${device.port}');
+                                            };
+                                        } else {
+                                            promptPin('${device.ip}', '${device.port}');
+                                        }
+                                    "
+                                    style="${
+                                        (() => {
+                                            try {
+                                                const deviceCookie = document.cookie.split('; ').find(row => row.startsWith('device='));
+                                                if (deviceCookie) {
+                                                    const deviceData = JSON.parse(decodeURIComponent(deviceCookie.split('=')[1]));
+                                                    if (deviceData.ip === device.ip && String(deviceData.port) === String(device.port)) {
+                                                        return 'background: red;';
+                                                    }
+                                                }
+                                            } catch (e) {}
+                                            return '';
+                                        })()
+                                    }"
+                                >
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
                                         <polyline points="15,3 21,3 21,9"/>
                                         <line x1="10" y1="14" x2="21" y2="3"/>
                                     </svg>
-                                    <span>Connect</span>
+                                    <span class="connect-btn-label">
+                                        ${
+                                            (() => {
+                                                try {
+                                                    const deviceCookie = document.cookie.split('; ').find(row => row.startsWith('device='));
+                                                    if (deviceCookie) {
+                                                        const deviceData = JSON.parse(decodeURIComponent(deviceCookie.split('=')[1]));
+                                                        if (deviceData.ip === device.ip && String(deviceData.port) === String(device.port)) {
+                                                            return "Disconnect";
+                                                        }
+                                                    }
+                                                } catch (e) {}
+                                                return "Connect";
+                                            })()
+                                        }
+                                    </span>
                                 </button>
                                 <button class="toggle-files-btn" onclick="toggleDeviceFiles('${device.ip}-${device.port}')" title="Show/Hide Files">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -146,7 +211,7 @@
         // Toggle device files visibility
         function toggleDeviceFiles(deviceId) {
             const filesSection = document.getElementById(`files-${deviceId}`);
-            const toggleBtn = event.target.closest('.toggle-files-btn');
+            const toggleBtn = document.querySelector(`button.toggle-files-btn[onclick*="${deviceId}"]`);
             const toggleIcon = toggleBtn.querySelector('svg polyline');
 
             if (filesSection.style.display === 'none') {
@@ -165,6 +230,38 @@
         async function loadDeviceFiles(deviceId) {
             const [ip, port] = deviceId.split('-');
             const filesList = document.getElementById(`files-list-${deviceId}`);
+
+            //if device cookie is there then only load files or pin required
+            const deviceCookie = document.cookie.split('; ').find(row => row.startsWith('device='));
+            if (deviceCookie) {
+                const deviceData = JSON.parse(decodeURIComponent(deviceCookie.split('=')[1]));
+                if (deviceData.ip !== ip || String(deviceData.port) !== port) {
+                    filesList.innerHTML = `
+                        <div class="error-files">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="8" x2="12" y2="12"/>
+                                <line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                            <span>Please connect to the device first.</span>
+                        </div>
+                    `;
+                    return;
+                }
+            }
+            else{
+                filesList.innerHTML = `
+                    <div class="error-files">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        <span>Please connect to the device first.</span>
+                    </div>
+                `;
+                return;
+            }
 
             try {
                 const response = await fetch('/loadfiles', {
@@ -231,13 +328,15 @@
         async function promptPin(ip, port) {
             const pin = prompt(`Enter PIN for ${ip}:${port}`);
 
+            console.log(pin)
+
             if (!pin) return;
 
             try {
                 const res = await fetch('/devices');
                 const devices = await res.json();
 
-                const device = devices.find(device => device.pin === pin && device.ip === ip && device.port === port);
+                const device = devices.find(device => device.ip == ip && device.port == port && device.pin == pin);
 
                 if (!device) {
                     alert('Invalid PIN or device not found.');
@@ -245,21 +344,25 @@
                 }
 
                 // Show success feedback
-                const connectBtn = event.target.closest('.connect-btn');
+                const connectBtn = document.querySelector(`button.connect-btn[onclick*="${ip}"][onclick*="${port}"]`);
                 const originalContent = connectBtn.innerHTML;
                 
                 connectBtn.innerHTML = `
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="20,6 9,17 4,12"/>
                     </svg>
-                    <span>Connected</span>
+                    <span>Disconnect</span>
                 `;
-                connectBtn.style.background = '#34C759';
-                
-                setTimeout(() => {
+                connectBtn.style.background = 'Red';
+                document.cookie = `device=${encodeURIComponent(JSON.stringify(device))}; max-age=${10 * 60}; path=/`;
+                toggleDeviceFiles(`${ip}-${port}`);
+                connectBtn.onclick = () => {
+                    document.cookie = "device=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                     connectBtn.innerHTML = originalContent;
                     connectBtn.style.background = '';
-                }, 2000);
+                    toggleDeviceFiles(`${ip}-${port}`);
+                    connectBtn.onclick = () => promptPin(ip, port);
+                };
                 
             } catch (err) {
                 console.error('Error verifying PIN:', err);
@@ -275,9 +378,6 @@
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
-
-        // Auto-refresh devices every 30 seconds
-        setInterval(loadDevices, 30000);
 
         // Initial load
         loadDevices();

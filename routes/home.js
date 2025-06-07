@@ -12,7 +12,7 @@ if (!fs.existsSync(tempUploadPath)) fs.mkdirSync(tempUploadPath, { recursive: tr
 router.get('/', (req, res) => {
   fs.readdir(tempUploadPath, (err, files) => {
     if (err) files = [];
-    res.render('index', { deviceName: DEVICE_NAME, pin: PIN, ip: localIP, port: 8005, files });
+    res.render('index', { req, res, deviceName: DEVICE_NAME, pin: PIN, ip: localIP, port: 8005, files });
   });
 });
 

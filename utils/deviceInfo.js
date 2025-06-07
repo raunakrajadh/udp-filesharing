@@ -1,6 +1,6 @@
 const os = require('os');
 
-const DEVICE_NAME = 'MyDevice-' + Math.floor(Math.random() * 1000);
+const DEVICE_NAME = 'MyDevice-' + Math.floor(Math.random() * 10000);
 const PIN = Math.floor(100000 + Math.random() * 900000).toString();
 
 function getLocalIPAddress() {
