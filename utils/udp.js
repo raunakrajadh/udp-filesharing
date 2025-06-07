@@ -36,7 +36,7 @@ function setupListener() {
       const message = JSON.parse(msg.toString());
 
       if(message.type == 'device-info'){
-        //if (message.deviceName === DEVICE_NAME) return;
+        if (message.deviceName === DEVICE_NAME) return;
         discoveredDevices.set(message.deviceName, {...message, lastSeen: Date.now()});
       } else {
         console.warn('Unknown message type:');

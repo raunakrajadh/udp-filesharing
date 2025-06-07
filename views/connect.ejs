@@ -121,7 +121,7 @@
                                                 <span class='connect-btn-label'>Connect</span>
                                             \`;
                                             connectBtn.style.background = '';
-                                            toggleDeviceFiles('${device.ip}-${device.port}');
+                                            loadDeviceFiles('${device.ip}-${device.port}');
                                             connectBtn.onclick = function() {
                                                 event.preventDefault();
                                                 promptPin('${device.ip}', '${device.port}');
@@ -355,12 +355,12 @@
                 `;
                 connectBtn.style.background = 'Red';
                 document.cookie = `device=${encodeURIComponent(JSON.stringify(device))}; max-age=${10 * 60}; path=/`;
-                toggleDeviceFiles(`${ip}-${port}`);
+                loadDeviceFiles(`${ip}-${port}`);
                 connectBtn.onclick = () => {
                     document.cookie = "device=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                     connectBtn.innerHTML = originalContent;
                     connectBtn.style.background = '';
-                    toggleDeviceFiles(`${ip}-${port}`);
+                    loadDeviceFiles(`${ip}-${port}`);
                     connectBtn.onclick = () => promptPin(ip, port);
                 };
                 
